@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ball</title>
+	<style type="text/css">
+		#ball{
+			width: 50px;
+			height: 50px;
+			border-radius: 100%; 	/*둥글게 */
+			background-color: lime;
+			position: absolute;
+		}
+		
+		#main{
+			width: 500px;
+			height: 500px;
+			border: 2px solid grey;
+		}
+	</style>
+	<script>
+	
+	var balls = [];
+	var colors = ['black', 'blue', 'green', 'purple', 'orange', 'red']
+	var ballsTotal = 0;
+	var ballsIgot = 0;
+	
+	function random(num) {
+		return parseInt(Math.random() * num);
+	}
+	
+	
+	
+	window.onload = function() {
+		
+		var addObject = setInterval(function() {
+			ballsTotal++;
+			var d = document.createElement('div');
+			document.getElementById('main').appendChild(d);
+			balls.push(d);
+			d.id = "ball";
+			d.style.left = random(450) + 'px';
+			d.style.top = "20px";
+			d.style.backgroundColor = colors[random(5)];
+			
+			var firstColor = d.style.backgroundColor;
+			//마우스 올리면 빨간색
+			d.onmouseover = function() {
+				d.style.backgroundColor = colors[5];
+			}
+			//내리면 원래색
+			d.onmouseout = function() {
+				d.style.backgroundColor = firstColor
+			}
+			//클릭 시 삭제			
+			d.onclick = function () {
+				/* alert("onclick"); */
+				ballsIgot++;
+				document.getElementById('main').removeChild(this);
+				delete(this)
+			}
+			
+			
+		}, 500);
+		
+		var moveObject = setInterval(function() {
+			for(var i in balls) {
+				//parseInt하는 이유: 'px'가 붙어있어서 해당 px를 없애기 위해
+				var y = parseInt(balls[i].style.top);
+				balls[i].style.top = y + random(30)+ 'px';
+				if(y>400) {
+					try {
+						document.getElementById("main").removeChild(balls[i]);
+						delete(balls[i]);
+					} catch(e) {}
+				}
+			}
+		}, 100);
+		
+		setTimeout(function () {
+			clearInterval(addObject);
+			clearInterval(moveObject);
+			alert('10초 동안 \n생성된 공 개수: ' + ballsTotal + '\n내가 잡은 공: ' + ballsIgot + '\n성공확률: ' + (ballsIgot/ballsTotal*100).toFixed(1) + '%')
+		}, 10010)
+	}
+	</script>
+</head>
+<body>
+	<div id ='main'>
+	</div>
+</body>
+</html>
